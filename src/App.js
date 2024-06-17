@@ -1,24 +1,31 @@
-import logo from './logo.svg';
 import './App.css';
+import Jumbotron from './components/Jumbotron';
+import SearchFile from "./components/SearchFile";
+import Images from './components/Images';
+import UserAxios from './Hooks/UserAxios';
+import { createContext } from 'react';
+
+// create context
+export const ImageContext = createContext();
 
 function App() {
+  const {response,isLoading,error,fetchData } = UserAxios(`search/photos?page=1&query=cats&client_id=${process.env.REACT_APP_ACCESS_KEY}`)
+  
+  const value = {
+    response,
+    isLoading,
+    error,
+    fetchData
+
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <ImageContext.Provider value={value}>
+   <Jumbotron>
+    <SearchFile />
+   </Jumbotron>
+   <Images/>
+   </ImageContext.Provider>
   );
 }
 
